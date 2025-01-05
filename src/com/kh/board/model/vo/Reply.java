@@ -1,80 +1,95 @@
 package com.kh.board.model.vo;
 
 public class Reply {
-
+	
 	private int replyNo;
 	private String replyContent;
 	private int refBoardNo;
-	private String replyWriter;
-	private String createDate; // 이번에는 날짜를 String 으로 받아서 처리해보자
+	private String boardWriter;
+	private String createDate;
 	private String status;
 	
+	
 	public Reply() {
-		super();
+		// TODO Auto-generated constructor stub
 	}
 
-	public Reply(int replyNo, String replyContent, int refBoardNo, String replyWriter, String createDate,
+
+	public Reply(int replyNo, String replyContent, String boardWriter, String createDate) {
+		super();
+		this.replyNo = replyNo;
+		this.replyContent = replyContent;
+		this.boardWriter = boardWriter;
+		this.createDate = createDate;
+	}
+
+
+	public Reply(int replyNo, String replyContent, int refBoardNo, String boardWriter, String createDate,
 			String status) {
 		super();
 		this.replyNo = replyNo;
 		this.replyContent = replyContent;
 		this.refBoardNo = refBoardNo;
-		this.replyWriter = replyWriter;
+		this.boardWriter = boardWriter;
 		this.createDate = createDate;
 		this.status = status;
 	}
 
-	public Reply(int replyNo, String replyContent, String replyWriter, String createDate) {
-		super();
-		this.replyNo = replyNo;
-		this.replyContent = replyContent;
-		this.replyWriter = replyWriter;
-		this.createDate = createDate;
-	}
 
 	public int getReplyNo() {
 		return replyNo;
 	}
 
+
 	public void setReplyNo(int replyNo) {
 		this.replyNo = replyNo;
 	}
+
 
 	public String getReplyContent() {
 		return replyContent;
 	}
 
+
 	public void setReplyContent(String replyContent) {
 		this.replyContent = replyContent;
 	}
+
 
 	public int getRefBoardNo() {
 		return refBoardNo;
 	}
 
+
 	public void setRefBoardNo(int refBoardNo) {
 		this.refBoardNo = refBoardNo;
 	}
 
-	public String getReplyWriter() {
-		return replyWriter;
+
+	public String getBoardWriter() {
+		return boardWriter;
 	}
 
-	public void setReplyWriter(String replyWriter) {
-		this.replyWriter = replyWriter;
+
+	public void setBoardWriter(String boardWriter) {
+		this.boardWriter = boardWriter;
 	}
+
 
 	public String getCreateDate() {
 		return createDate;
 	}
 
+
 	public void setCreateDate(String createDate) {
 		this.createDate = createDate;
 	}
 
+
 	public String getStatus() {
 		return status;
 	}
+
 
 	public void setStatus(String status) {
 		this.status = status;
@@ -83,6 +98,9 @@ public class Reply {
 	@Override
 	public String toString() {
 		return "Reply [replyNo=" + replyNo + ", replyContent=" + replyContent + ", refBoardNo=" + refBoardNo
-				+ ", replyWriter=" + replyWriter + ", createDate=" + createDate + ", status=" + status + "]";
+				+ ", boardWriter=" + boardWriter + ", createDate=" + createDate + ", status=" + status + "]";
 	}
+	
+	
+
 }

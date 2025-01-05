@@ -7,7 +7,7 @@ public class Notice {
 	private int noticeNo;
 	private String noticeTitle;
 	private String noticeContent;
-	private String noticeWriter; // 조회 시 작성자 아이디 / 작성하기시 로그인한 회원번호
+	private String noticeWriter;
 	private int count;
 	private Date createDate;
 	private String status;
@@ -37,7 +37,7 @@ public class Notice {
 		this.createDate = createDate;
 	}
 	
-	public Notice(int noticeNo, String noticeTitle, String noticeContent, String noticeWriter, Date createDate) {
+	public Notice(int noticeNo, String noticeTitle, String noticeContent , String noticeWriter , Date createDate) {
 		super();
 		this.noticeNo = noticeNo;
 		this.noticeTitle = noticeTitle;
@@ -108,4 +108,5 @@ public class Notice {
 				+ ", noticeWriter=" + noticeWriter + ", count=" + count + ", createDate=" + createDate + ", status="
 				+ status + "]";
 	}
+	
 }

@@ -92,7 +92,8 @@
 	                </tr>
 	                <tr>
 	                    <th colspan="2">
-	                        <button type="submit">로그인</button>
+	                    	<input type="checkbox" id="saveId"><label for="saveId">아이디 저장</label>
+	                        <button type="button" onclick="submitLogin();">로그인</button>
 	                        <button type="button" onclick="enrollPage();">회원가입</button>
 	                    </th>
 	                </tr>
@@ -100,14 +101,51 @@
 	        </form>
 	        
 	        <script>
+	        	$(function(){
+	        		getCookie();
+	        	});
+	        
 	        	function enrollPage() {
 	        		// location.href = "<%= contextPath %>/views/member/memberEnrollForm.jsp";
 	        		// 웹 애플리케이션의 디렉토리 구조가 url 에 노출되면 보안에 취약
 	        		
-	        		// 단순한 정적인 페이지 요청이라고 해도 반드시 servlet 을 거쳐갈 것! => 
-					//url 에 서블릿 매핑값만 노출됨
+	        		// 단순한 정적인 페이지 요청이라고 해도 반드시 servlet 을 거쳐갈 것! => url 에 서블릿 매핑값만 노출됨
 	        		location.href = "<%= contextPath %>/enrollForm.me";
 	        	}
+	        	
+	        	function submitLogin(){
+	        		
+	        		let userId = $("input[name=userId]").val();
+	        		
+	        		if($("#saveId").is(":checked")){//true 체크된 상태
+	        			document.cookie = "saveId="+userId+"; path=/; max-age="+60*60*24*7;// 쿠키 최대시간 설정
+	        		}else{// 체크 안된상태
+	        			document.cookie = "saveId="+userId+"; path=/; max-age="+0;//최대시간을 0으로 설정해서 해당쿠키를 제거.
+	        		}
+	        		
+	        		let form = $("#login-form");
+	        		form.submit();
+	        	}
+	        	
+	        	function getCookie(){
+	        		let value = "";
+	        		if(document.cookie.length > 0){
+	        			let index = document.cookie.indexOf("saveId=");// saveId=admin; path=/; max-age=5660;
+	        			if(index != -1){
+	        				index += "saveId=".length;
+	        				let end = document.cookie.indexOf(";",index);
+	        				console.log(index, end);
+	        				if(end == -1){
+	        					value = document.cookie.substring(index);
+	        				}else{
+		        				value = document.cookie.substring(index,end);	        					
+	        				}
+			        		$("input[name=userId]").val(value);
+			        		$("#saveId").attr("checked","true");
+	        			}
+	        		}
+	        	} 
+	        	
 	        </script>
         
         <% } else { %>
@@ -133,8 +171,8 @@
         <!-- (.menu>a)*4 -->
         <div class="menu"><a href="<%= contextPath %>">HOME</a></div>
         <div class="menu"><a href="<%= contextPath %>/list.no">공지사항</a></div>
-        <div class="menu"><a href="<%= contextPath %>/list.bo?currentPage=1">일반게시판</a></div>
-        <div class="menu"><a href="<%= contextPath %>/list.th">사진게시판</a></div>
+        <div class="menu"><a href="<%= contextPath %>/board/list.bo?currentPage=1">일반게시판</a></div>
+        <div class="menu"><a href="<%= contextPath %>/thumb/list.th">사진게시판</a></div>
 
     </div>
 

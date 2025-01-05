@@ -31,17 +31,16 @@ public class NoticeListController extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-		// 공지사항 전체 리스트 조회 한 후 조회결과를 담아서 응답페이지로 포워딩
+		
+		// 공지사항 전체 리스트 조회 한 후 조회결과를 담아서 응답페이지로 포워딩.	
 		ArrayList<Notice> list = new NoticeService().selectNoticeList();
 		
-		// 응답페이지 보기 전 한번 출력해보기!
-		// System.out.println(list);
+		System.out.println(list);
 		
-		// 응답페이지 : 공지사항 리스트 페이지 (noticeListView.jsp)
 		request.setAttribute("list", list);
 		
-		request.getRequestDispatcher("/views/notice/noticeListView.jsp").forward(request, response);
+		request.getRequestDispatcher("views/notice/noticeListView.jsp").forward(request, response);
+	
 	}
 
 	/**

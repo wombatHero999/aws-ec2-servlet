@@ -47,20 +47,19 @@
 		  AND STATUS = 'Y'
 	</entry>
 	
-	<entry key="updatePwdMember">
+	<entry key ="updatePwdMember">
 		UPDATE MEMBER
-		SET USER_PWD = ?
-		  , MODIFY_DATE = SYSDATE
-		 WHERE USER_ID = ?
-		   AND USER_PWD = ?
+		SET USER_PWD = ? ,
+			MODIFY_DATE = SYSDATE
+		WHERE USER_ID = ? AND USER_PWD = ?
 	</entry>
 	
 	<entry key="deleteMember">
 		UPDATE MEMBER
 		SET STATUS = 'N'
-		  , MODIFY_DATE = SYSDATE
-		 WHERE USER_ID = ?
-		   AND USER_PWD = ?
+		    , MODIFY_DATE = SYSDATE
+		WHERE USER_ID = ? 
+		  AND USER_PWD = ?
 	</entry>
 	
 	<entry key="idCheck">
@@ -68,5 +67,16 @@
 		FROM MEMBER
 		WHERE USER_ID = ?
 	</entry>
-
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 </properties>

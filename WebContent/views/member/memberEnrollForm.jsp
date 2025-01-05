@@ -119,28 +119,25 @@
     		
     		$.ajax({
     			url : "idCheck.me",
-    			data : {checkId : $userId.val()},
-    			success : function(result) {
-    				if(result == "NNNNN") { // 사용불가
-    					alert("이미 존재하거나 탈퇴한 회원의 아이디입니다.");
-    					$userId.focus(); // 다시 입력 유도
-    				}
-    				else { // 사용 가능
-    					if(confirm("사용 가능한 아이디입니다. 사용하시겠습니까?")) { // 사용함
-    						
+    			data : {checkId : $userId.val() },
+    			success : function(result){
+    				if(result == "NNNNN"){ // 사용불가
+    					alert("이미 존재하거나 회원탈퇴한 아이디입니다.");
+    					$userId.focus();
+    				} else {// 사용가능
+    					if(confirm("사용가능한 아이디입니다. 사용하시겠습니까?")){
     						$("#enroll-form :submit").removeAttr("disabled"); // 회원가입버튼 활성화
     						$userId.attr("readonly", true); // 아이디값 확정
-    					}
-    					else { // 사용 안함 => 다시입력
-        					$userId.focus(); // 다시 입력 유도
-    					}
+    						
+    					}else{ // 사용안함    						
+    						$userId.focus();   						
+    					}    					
     				}
     			},
-    			error : function() {
-    				console.log("아이디 중복체크용 ajax 통신 실패!");
+    			error : function(){
+    				console.log("아이디 중복체크용 ajax통신 실패");
     			}
-    		});
-    		
+    		})
     	}
     </script>
 	

@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Properties;
 
 import com.kh.common.JDBCTemplate;
@@ -31,19 +32,29 @@ public class MemberDao {
 		// SELECT 문 => ResultSet 객체 (unique key 조건에 의해 한 행만 조회됨) => Member 객체
 		Member m = null;
 
-		PreparedStatement pstmt = null;
+		//PreparedStatement pstmt = null;
+		
+		Statement stmt = null;
 		
 		ResultSet rset = null;
 		
-		String sql = prop.getProperty("loginMember");
-		
+		//String sql = prop.getProperty("loginMember");
+		String sql = "SELECT * "+ 
+				"FROM MEMBER " + 
+				"WHERE USER_ID = '"+userId +"'"+
+				  " AND USER_PWD = '"+userPwd +"'"+
+				  " AND STATUS = 'Y'";
 		try {
-			pstmt = conn.prepareStatement(sql);
+			stmt = conn.createStatement();
 			
-			pstmt.setString(1, userId);
-			pstmt.setString(2, userPwd);
+			//pstmt = conn.prepareStatement(sql);
 			
-			rset = pstmt.executeQuery();
+			//pstmt.setString(1, userId);
+			//pstmt.setString(2, userPwd);
+			
+			//rset = pstmt.executeQuery();
+			
+			rset = stmt.executeQuery(sql);
 			
 			if(rset.next()) {
 				m = new Member(rset.getInt("USER_NO"), 
@@ -63,7 +74,8 @@ public class MemberDao {
 			e.printStackTrace();
 		} finally {
 			JDBCTemplate.close(rset);
-			JDBCTemplate.close(pstmt);
+			//JDBCTemplate.close(pstmt);
+			JDBCTemplate.close(stmt);
 		}
 		
 		return m;
@@ -171,89 +183,112 @@ public class MemberDao {
 		
 		return m;
 	}
-
-	public int updatePwdMember(Connection conn, String userId, String userPwd, String updatePwd) {
-
-		// UPDATE 문 => 처리된 행의 수
+	
+	
+	public int updatePwdMember(String userId, String userPwd, String updatePwd, Connection conn) {
+		
 		int result = 0;
 		
-		PreparedStatement pstmt = null;
+		PreparedStatement psmt = null;
 		
 		String sql = prop.getProperty("updatePwdMember");
-				
+		
 		try {
-			pstmt = conn.prepareStatement(sql);
+			psmt = conn.prepareStatement(sql);
 			
-			pstmt.setString(1, updatePwd);
-			pstmt.setString(2, userId);
-			pstmt.setString(3, userPwd);
+			psmt.setString(1, updatePwd);
+			psmt.setString(2, userId);
+			psmt.setString(3, userPwd);
 			
-			result = pstmt.executeUpdate();
+			result = psmt.executeUpdate();
+			
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			JDBCTemplate.close(pstmt);
+			JDBCTemplate.close(psmt);
 		}
+		
 		
 		return result;
 	}
-
-	public int deleteMember(Connection conn, String userId, String userPwd) {
-
-		// UPDATE 문 => 처리된 행의 수
+	
+	public int deleteMember(String userId, String userPwd, Connection conn) {
+		
 		int result = 0;
 		
-		PreparedStatement pstmt = null;
+		PreparedStatement psmt = null;
 		
 		String sql = prop.getProperty("deleteMember");
-				
+		
 		try {
-			pstmt = conn.prepareStatement(sql);
+			psmt = conn.prepareStatement(sql);
 			
-			pstmt.setString(1, userId);
-			pstmt.setString(2, userPwd);
+			psmt.setString(1, userId);
+			psmt.setString(2, userPwd);
 			
-			result = pstmt.executeUpdate();
+			result = psmt.executeUpdate();
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			JDBCTemplate.close(pstmt);
+			JDBCTemplate.close(psmt);
 		}
 		
 		return result;
 	}
-
+	
 	public int idCheck(Connection conn, String checkId) {
-
-		// select 문 => ResultSet (숫자 하나)
 		
+		// select-> ResultSET (숫자 하나)
 		int count = 0;
 		
-		PreparedStatement pstmt = null;
+		PreparedStatement psmt = null;
 		
 		ResultSet rset = null;
 		
 		String sql = prop.getProperty("idCheck");
 		
 		try {
-			pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1, checkId);
+			psmt = conn.prepareStatement(sql);
+			psmt.setString(1, checkId);
 			
-			rset = pstmt.executeQuery();
+			rset = psmt.executeQuery();
 			
 			if(rset.next()) {
-				count = rset.getInt("COUNT(*)");
+				count = rset.getInt(1);
 			}
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
 			JDBCTemplate.close(rset);
-			JDBCTemplate.close(pstmt);
+			JDBCTemplate.close(psmt);
 		}
 		
 		return count;
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
 
 }

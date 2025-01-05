@@ -3,13 +3,12 @@ package com.kh.board.model.vo;
 import java.sql.Date;
 
 public class Board {
-	
 	private int boardNo;
 	private int boardType;
-	private String category; // 게시글 작성 시 번호 그대로 받는경우, 조회 시 카테고리명으로 조회(문자열)
+	private String category; // 실제로 board테이블에 저장된 데이터는 category_no지만, 조회시 카테고리명으로 조회할것(문자열)
 	private String boardTitle;
 	private String boardContent;
-	private String boardWriter; // 작성시 회원번호, 조회시 회원아이디로 조회(문자열)
+	private String boardWriter;// 실제로 board테이블에 저장된 데이터는 user_no이지만, 조회시 회원아이디로 조회할것(문자열)
 	private int count;
 	private Date createDate;
 	private String status;
@@ -21,7 +20,7 @@ public class Board {
 	}
 
 	public Board(int boardNo, int boardType, String category, String boardTitle, String boardContent,
-			String boardWriter, int count, Date createDate, String status) {
+			String boardWriter, int count, Date createDate, String status, String titleImg) {
 		super();
 		this.boardNo = boardNo;
 		this.boardType = boardType;
@@ -32,8 +31,9 @@ public class Board {
 		this.count = count;
 		this.createDate = createDate;
 		this.status = status;
+		this.titleImg = titleImg;
 	}
-	
+
 	public Board(int boardNo, String category, String boardTitle, String boardWriter, int count, Date createDate) {
 		super();
 		this.boardNo = boardNo;
@@ -126,7 +126,7 @@ public class Board {
 	public void setStatus(String status) {
 		this.status = status;
 	}
-	
+
 	public String getTitleImg() {
 		return titleImg;
 	}
@@ -139,7 +139,10 @@ public class Board {
 	public String toString() {
 		return "Board [boardNo=" + boardNo + ", boardType=" + boardType + ", category=" + category + ", boardTitle="
 				+ boardTitle + ", boardContent=" + boardContent + ", boardWriter=" + boardWriter + ", count=" + count
-				+ ", createDate=" + createDate + ", status=" + status + "]";
-	}	
+				+ ", createDate=" + createDate + ", status=" + status + ", titleImg=" + titleImg + "]";
+	}
+	
+	
+	
 	
 }

@@ -15,7 +15,7 @@ import com.kh.board.model.vo.Board;
 /**
  * Servlet implementation class ThumbnailListController
  */
-@WebServlet("/list.th")
+@WebServlet("/thumb/list.th")
 public class ThumbnailListController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
@@ -32,13 +32,15 @@ public class ThumbnailListController extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-		// 사진게시판 리스트페이지에 필요한 데이터를 조회해와야함
+		//사진게시판 목록 데이터 가져오기
+		
 		ArrayList<Board> list = new BoardService().selectThumbnailList();
 		
 		request.setAttribute("list", list);
 		
-		request.getRequestDispatcher("views/board/thumbnailListView.jsp").forward(request, response);
+		System.out.println(list);
 		
+		request.getRequestDispatcher("/views/board/thumbnailListView.jsp").forward(request,response);
 	}
 
 	/**

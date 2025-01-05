@@ -16,29 +16,29 @@ import com.kh.member.model.service.MemberService;
 public class AjaxIdCheckController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
-	/**
-	 * @see HttpServlet#HttpServlet()
-	 */
-	public AjaxIdCheckController() {
-	    super();
-	    // TODO Auto-generated constructor stub
-	}
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+    public AjaxIdCheckController() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+		
 		String checkId = request.getParameter("checkId");
-		
+	
 		int count = new MemberService().idCheck(checkId);
-		
-		if(count > 0) {  // 존재하는 아이디가 있을 경우 => 사용 불가능
+	
+		if(count > 0) {// 중복된 아이디가 존재한다. -> 사용불가.
 			response.getWriter().print("NNNNN");
-		}
-		else { // 존재하는 아이디가 없을 경우 => 사용 가능
+		}else {// 존재하는 아이디가 없을경우 -> 사용 가능
 			response.getWriter().print("NNNNY");
 		}
+	
 	}
 
 	/**

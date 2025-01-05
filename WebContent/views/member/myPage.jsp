@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+    pageEncoding="UTF-8" import ="com.kh.common.AESCryptor" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -27,6 +27,7 @@
 		String userName = loginUser.getUserName();
 		String phone = (loginUser.getPhone() == null) ? "" : loginUser.getPhone(); // 삼항연산자
 		String email = (loginUser.getEmail() == null) ? "" : loginUser.getEmail();
+		email = AESCryptor.decrypt(email);
 		String address = (loginUser.getAddress() == null) ? "" : loginUser.getAddress();
 		String interest = (loginUser.getInterest() == null) ? "" : loginUser.getInterest(); // "운동, 등산"
 	%>
@@ -95,7 +96,6 @@
             </table>
             
             <script>
-				[].forEach
             	$(function() {
             		
             		var interest = "<%= interest %>"; 
@@ -124,58 +124,23 @@
             <br><br>
         </form>
     </div>
+  
+  
+  
+<div id="updatePwdForm" class="modal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
     
-    <!-- The Modal -->
-	<div class="modal" id="deleteForm">
-	  <div class="modal-dialog">
-	    <div class="modal-content">
-	
-	      <!-- Modal Header -->
-	      <div class="modal-header">
-	        <h4 class="modal-title">회원탈퇴</h4>
-	        <button type="button" class="close" data-dismiss="modal">&times;</button>
-	      </div>
-	
-	      <!-- Modal body -->
-	      <div class="modal-body" align="center">
-
-			<b>탈퇴 후 복구가 불가능합니다. <br>정말로 탈퇴하시겠습니까?</b><br><br>
-			
-			<form action="<%= contextPath %>/delete.me" method="post">
-				<table>
-					<tr>
-						<td>비밀번호</td>
-						<td><input type="password" name="userPwd" required></td>
-					</tr>
-				</table>
-				<br>
-				
-				<button type="submit" class="btn btn-danger btn-sm">탈퇴하기</button>
-			</form>
-			
-			</div>
-	
-	    </div>
-	  </div>
-	</div>
-	
-    <!-- The Modal -->
-	<div class="modal" id="updatePwdForm">
-	  <div class="modal-dialog">
-	    <div class="modal-content">
-	
-	      <!-- Modal Header -->
-	      <div class="modal-header">
-	        <h4 class="modal-title">비밀번호 변경</h4>
-	        <button type="button" class="close" data-dismiss="modal">&times;</button>
-	      </div>
-	
-	      <!-- Modal body -->
-	      <div class="modal-body" align="center">
-
-			<form action="<%= contextPath %>/updatePwd.me" method="post">
-				<!-- 현재 비밀번호, 변경할 비밀번호, 변경할 비밀번호 재입력 -->
-				<input type="hidden" name="userId" value="<%= userId %>">
+      <div class="modal-header">
+        <h5 class="modal-title">비밀번호 변경</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      
+      <div class="modal-body" align="center">
+			<form action="<%=contextPath%>/updatePwd.me" method="post">
+				<input type ="hidden" name="userId" value="<%=userId%>">
 				<table>
 					<tr>
 						<td>현재 비밀번호</td>
@@ -192,29 +157,84 @@
 				</table>
 				
 				<br>
-				
-				<button type="submit" class="btn btn-secondary btn-sm" onclick="return validatePwd();">비밀번호 변경</button>
+				<button type="submit" class="btn btn-secondary btn-sm" onclick="return validatePwd();">비밀번호변경</button>
 			</form>
 			
 			<script>
-				
-				function validatePwd() {
-
-					if($("input[name=updatePwd]").val() != $("input[name=checkPwd]").val()) {
-						
-						alert("비밀번호가 일치하지 않습니다.");
+				function validatePwd(){
+					if($("input[name=updatePwd]").val() != $("input[name=checkPwd]").val()){
+						alert("비밀번호가 일치하지 않네요.");
 						
 						return false;
 					}
 				}
-			
 			</script>
+        
+        
+      </div>   
+     
+    </div>
+  </div>
+</div>
+    
 
-	      </div>
+<div id="deleteForm" class="modal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+    
+      <div class="modal-header">
+        <h5 class="modal-title">회원탈퇴</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      
+      <div class="modal-body" align="center">
+      	
+      		<b>탈퇴 후 복구가 불가능합니다. <br>
+      			정말로 탈퇴하시겠습니까?<br><br>
+      		</b>
+			<form action="<%=contextPath%>/delete.me" method="post">
+				<table>
+					<tr>
+						<td>현재 비밀번호</td>
+						<td><input type="password" name="userPwd" required></td>
+					</tr>
+				</table>
+				
+				<br>
+				<button type="submit" class="btn btn-danger btn-sm">탈퇴하기</button>
+			</form>
+      </div>
+      
+    </div>
+  </div>
+</div>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 	
-	    </div>
-	  </div>
-	</div>
+    
 	
 </body>
 </html>

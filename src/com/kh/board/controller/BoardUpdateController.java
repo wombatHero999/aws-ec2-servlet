@@ -2,8 +2,6 @@ package com.kh.board.controller;
 
 import java.io.File;
 import java.io.IOException;
-
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -25,99 +23,94 @@ import com.oreilly.servlet.MultipartRequest;
 public class BoardUpdateController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
-	/**
-	 * @see HttpServlet#HttpServlet()
-	 */
-	public BoardUpdateController() {
-	    super();
-	    // TODO Auto-generated constructor stub
-	}
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+    public BoardUpdateController() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+		
 		request.setCharacterEncoding("UTF-8");
 		
-		// enctype 이 multipart/form-data 로 잘 전송되었을 때만 전반적인 내용이 수행되도록
+		// enctype이 multipart/form-data인지 확인후 true라면 코드실행
 		if(ServletFileUpload.isMultipartContent(request)) {
 			
-			// 1_1. 전송파일 용량 제한 (int maxSize)
+			//1_1 . 전송파일의 용량제한
 			int maxSize = 10 * 1024 * 1024;
 			
-			// 1_2. 전달된 파일을 저장시킬 서버의 폴더의 물리적인 경로 알아내기(String savePath)
-			// "/" 는 WebContent 폴더를 의미함
+			//1_2 . 전달된 파일을 저장시킬 서버의 폴더의 물리적인 경로 알아내기
 			String savePath = request.getSession().getServletContext().getRealPath("/resources/board_upfiles/");
 			
-			// 2. 전달된 파일명 수정 작업 후 서버에 업로드
-			// HttpServletRequest => MultipartRequest
+			//2. 전달된 파일명 수정작업후 서버에 업로드
 			MultipartRequest multiRequest = new MultipartRequest(request, savePath, maxSize, "UTF-8", new MyFileRenamePolicy());
 			
-			// 3. 본격적으로 SQL 문 실행할 때 필요한 값(요청시 전달값) 뽑기
-			// - 공통적으로 수행 : Board 테이블에 UPDATE
+			//3. 본격적으로 sql문 실행시 필요한값
+			// - Board테이블에 update 항상 수행
 			int boardNo = Integer.parseInt(multiRequest.getParameter("bno"));
 			String category = multiRequest.getParameter("category");
-			String boardTitle = multiRequest.getParameter("boardTitle");
-			String boardContent = multiRequest.getParameter("boardContent");
+			String boardTitle = multiRequest.getParameter("title"); 
+			String boardContent = multiRequest.getParameter("content");
 			
 			Board b = new Board();
 			b.setBoardNo(boardNo);
+			b.setCategory(category);
 			b.setBoardTitle(boardTitle);
 			b.setBoardContent(boardContent);
-			b.setCategory(category);
 			
-			// 새로이 전달된 첨부파일이 있을 경우 필요한 값 뽑기
+			// 새롭게 전달된 첨부파일이 있는경우에만 at변수에 필요한 값을 추가할것.
 			Attachment at = null;
 			
-			if(multiRequest.getOriginalFileName("reUpfile") != null) {
+			if(multiRequest.getOriginalFileName("upfile") != null) {
 				
-				// 3개의 쿼리문 중 공통적으로 필요한 항목들을 한번에 담기
+				// 3가지 공통적으로 필요한 변수 셋팅
 				at = new Attachment();
-				at.setOriginName(multiRequest.getOriginalFileName("reUpfile"));
-				at.setChangeName(multiRequest.getFilesystemName("reUpfile"));
+				at.setOriginName(multiRequest.getOriginalFileName("upfile"));
+				at.setChangeName(multiRequest.getFilesystemName("upfile"));
 				at.setFilePath("resources/board_upfiles/");
 				
-				// 첨부파일이 있을 경우 원본파일의 파일번호, 수정명을 hidden 으로 넘겼었음!!
+				// 첨부파일이 있을경우 원본파일의 파일번호, 수정명을 hidden으로 넘겨받았음.
 				if(multiRequest.getParameter("originFileNo") != null) {
-					// 새로운 첨부파일이 있고, 기존의 파일이 있었을 경우
-					// => Update Attachment  
-					//	  + 기존의 파일 고유번호
+					//기존에 파일이 있는경우
+					// => update Attachment
+					// 기존의 파일번호를 가지고 
 					at.setFileNo(Integer.parseInt(multiRequest.getParameter("originFileNo")));
 					
 					// 기존의 첨부파일 삭제
-					new File(savePath + multiRequest.getParameter("originFileName")).delete();
-				}
-				else {
-					// 새로운 첨부파일이 넘어왔지만, 기존의 파일이 없었을 경우
-					// => Insert Attachment
-					//    + 현재 게시글 번호
+					new File(savePath+multiRequest.getParameter("originFileName")).delete();
+				}else {
+					//기존에 파일이 없는경우
+					// => insert Attachment
+					// ref_bno + 현재 게시물 번호
 					at.setRefNo(boardNo);
-					
 				}
 			}
 			
-			// 모두 하나의 트랜잭션으로 처리해야함
-			int result = new BoardService().updateBoard(b, at);
+			//모두 하나의 트랜잭션으로 처리하기.
+			int result = new BoardService().updateBoard(b , at);
 			
-			// case1 : 새로운 첨부파일 X 			  => b, null 			=> Board Update
-			// case2 : 새로운 첨부파일 O, 기존 첨부파일 O => b, fileNo 이 담긴 at => Board Update, Attachment Update
-			// case3 : 새로운 첨부파일 O, 기존 첨부파일 X => b, refNo 이 담긴 at  => Board Update, Attachment Insert
-
-			if(result > 0) { // 수정 성공 => 상세조회페이지
-				
+			// case1 : 새로운 첨부파일 없는경우(x) => b, null => Board Update 
+			// case2 : 새로운 첨부파일 있는경우(0), 기존 첨부파일도 있는경우 (0) => b , at에 fileNo => Board update, Attachment update 
+			// case3 : 새로운 첨부파일 있는경우(0), 기존 첨부파일은 없는경우 (x) => b , at에 refNo => Board update, Attachment Insert
+			
+			if(result > 0) { // 수정성공 => 상세조회페이지
 				request.getSession().setAttribute("alertMsg", "성공적으로 수정되었습니다.");
-				response.sendRedirect(request.getContextPath() + "/detail.bo?bno=" + boardNo);
+				response.sendRedirect(request.getContextPath()+"/detail.bo?bno="+boardNo);
+			} else { // 수정실패 => errorPage
+				request.setAttribute("errorMsg","게시글 수정에 실패했습니다");
+				request.getRequestDispatcher("views/common/errorPage.jsp").forward(request, response);
 			}
-			else { // 수정 실패 => 에러페이지
-
-				request.setAttribute("errorMsg", "게시글 수정에 실패했습니다.");
-				
-				RequestDispatcher view = request.getRequestDispatcher("views/common/errorPage.jsp");
-				view.forward(request, response);
-			}
+			
 		}
-		
+	
+	
+	
+	
 	}
 
 	/**

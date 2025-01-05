@@ -17,8 +17,7 @@ public class JDBCTemplate {
 		Properties prop = new Properties(); // Map 계열 컬렉션 (key-value)
 		
 		// 읽어들이고자 하는 driver.properties 파일의 물리적인 경로
-		String fileName = JDBCTemplate.class.getResource("/sql/driver/driver.properties").getPath(); 
-		// 맨 처음의 / 는 classes 폴더를 의미한다.
+		String fileName = JDBCTemplate.class.getResource("/sql/driver/driver.properties").getPath(); // 맨 처음의 / 는 classes 폴더를 의미한다.
 		// C:\Web-workspace2\JSP_Project\WebContent\WEB-INF\classes\sql\driver\driver.properties
 		
 		try {
@@ -37,7 +36,6 @@ public class JDBCTemplate {
 			conn = DriverManager.getConnection(prop.getProperty("url"),
 											   prop.getProperty("username"),
 											   prop.getProperty("password"));
-			
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} catch (SQLException e) {

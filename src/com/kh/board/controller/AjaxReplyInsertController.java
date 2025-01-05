@@ -18,30 +18,30 @@ import com.kh.member.model.vo.Member;
 public class AjaxReplyInsertController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
-	/**
-	 * @see HttpServlet#HttpServlet()
-	 */
-	public AjaxReplyInsertController() {
-	    super();
-	    // TODO Auto-generated constructor stub
-	}
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+    public AjaxReplyInsertController() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+		
 		String replyContent = request.getParameter("content");
 		int boardNo = Integer.parseInt(request.getParameter("bno"));
-		int userNo = ((Member)request.getSession().getAttribute("loginUser")).getUserNo();
-		
+		int userNo = ((Member) request.getSession().getAttribute("loginUser")).getUserNo();
+	
 		Reply r = new Reply();
 		r.setReplyContent(replyContent);
 		r.setRefBoardNo(boardNo);
-		r.setReplyWriter(String.valueOf(userNo));
+		r.setBoardWriter(userNo+"");
 		
 		int result = new BoardService().insertReply(r);
-	
+		
 		response.getWriter().print(result);
 	}
 

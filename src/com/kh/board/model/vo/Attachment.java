@@ -3,7 +3,7 @@ package com.kh.board.model.vo;
 import java.sql.Date;
 
 public class Attachment {
-	
+
 	private int fileNo;
 	private int refNo;
 	private String originName;
@@ -94,4 +94,11 @@ public class Attachment {
 		this.status = status;
 	}
 
+	@Override
+	public String toString() {
+		return "Attachment [fileNo=" + fileNo + ", refNo=" + refNo + ", originName=" + originName + ", changeName="
+				+ changeName + ", filePath=" + filePath + ", uploadDate=" + uploadDate + ", fileLevel=" + fileLevel
+				+ ", status=" + status + "]";
+	}
+	
 }

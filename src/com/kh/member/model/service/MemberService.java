@@ -75,52 +75,55 @@ public class MemberService {
 		return updateMem;
 	}
 
+
 	/**
 	 * 비밀번호 수정용 서비스
 	 * @param userId => 수정할 회원의 아이디
 	 * @param userPwd => 수정할 회원의 원래 비밀번호
 	 * @param updatePwd => 수정할 새로운 비밀번호
-	 * @return => 수정한 회원의 갱신된 정보
+	 * @return => 수정된 회원의 갱신된 정보
 	 */
-	public Member updatePwdMember(String userId, String userPwd, String updatePwd) {
+	public Member updatePwdMember(String userId , String userPwd, String updatePwd) {
 		
 		Connection conn = JDBCTemplate.getConnection();
 		
-		int result = new MemberDao().updatePwdMember(conn, userId, userPwd, updatePwd);
-		
 		Member updateMem = null;
 		
-		if(result > 0) {
+		int result = 0;
+		
+		result = new MemberDao().updatePwdMember(userId, userPwd, updatePwd, conn);
+		
+		if(result > 0) {// 성공시
 			JDBCTemplate.commit(conn);
 			
-			// 갱신된 회원 객체 다시 조회해오기
+			// 갱신된 회원객체 다시 조회해오기.
 			updateMem = new MemberDao().selectMember(conn, userId);
-		}
-		else {
+		}else {//실패시
 			JDBCTemplate.rollback(conn);
 		}
 		
 		JDBCTemplate.close(conn);
 		
-		return updateMem;
+		return updateMem;		
 	}
-
-	/**
+	
+	
+	
+	/** 
 	 * 회원탈퇴용 서비스
-	 * @param userId => 탈퇴 요청한 회원의 아이디
-	 * @param userPwd => 탈퇴 요청한 회원의 비밀번호
-	 * @return => 처리된 행의 수 (int)
+	 * @param userId => 탈퇴 요청한 회원의 아이디.
+	 * @param userPwd => 탈퇴 요청한 회원의 비밀번호.
+	 * @return => 처리된 행의 수
 	 */
 	public int deleteMember(String userId, String userPwd) {
 		
 		Connection conn = JDBCTemplate.getConnection();
 		
-		int result = new MemberDao().deleteMember(conn, userId, userPwd);
+		int result = new MemberDao().deleteMember(userId, userPwd, conn);
 		
 		if(result > 0) {
 			JDBCTemplate.commit(conn);
-		}
-		else {
+		}else {
 			JDBCTemplate.rollback(conn);
 		}
 		
@@ -128,9 +131,9 @@ public class MemberService {
 		
 		return result;
 	}
-
+	
 	public int idCheck(String checkId) {
-
+		
 		Connection conn = JDBCTemplate.getConnection();
 		
 		int count = new MemberDao().idCheck(conn, checkId);
@@ -139,5 +142,23 @@ public class MemberService {
 		
 		return count;
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 }

@@ -30,9 +30,9 @@ public class MemberUpdatePwdController extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+		
 		request.setCharacterEncoding("UTF-8");
-				
+		
 		String userId = request.getParameter("userId");
 		String userPwd = request.getParameter("userPwd");
 		String updatePwd = request.getParameter("updatePwd");
@@ -40,17 +40,15 @@ public class MemberUpdatePwdController extends HttpServlet {
 		Member updateMem = new MemberService().updatePwdMember(userId, userPwd, updatePwd);
 	
 		HttpSession session = request.getSession();
-		if(updateMem == null) { // 실패 => 마이페이지 alert
-			
+		
+		if(updateMem == null) {// 실패 실행할 로직
 			session.setAttribute("alertMsg", "비밀번호 변경에 실패했습니다.");
-		}
-		else { // 성공 => 마이페이지 alert
-			
+		}else {// 성공시 
 			session.setAttribute("alertMsg", "성공적으로 비밀번호가 변경되었습니다.");
-			session.setAttribute("loginUser", updateMem);
+			session.setAttribute("loginUser",updateMem);
 		}
 		
-		response.sendRedirect(request.getContextPath() + "/myPage.me");
+		response.sendRedirect(request.getContextPath()+"/myPage.me"); // /jsp
 	}
 
 	/**

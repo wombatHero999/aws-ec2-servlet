@@ -21,28 +21,28 @@ import com.kh.board.model.vo.Category;
 public class BoardUpdateFormController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
-	/**
-	 * @see HttpServlet#HttpServlet()
-	 */
-	public BoardUpdateFormController() {
-	    super();
-	    // TODO Auto-generated constructor stub
-	}
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+    public BoardUpdateFormController() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+		
 		BoardService bService = new BoardService();
 		
 		int boardNo = Integer.parseInt(request.getParameter("bno"));
 		
 		ArrayList<Category> list = bService.selectCategoryList();
 		
-		Board b = bService.selectBoard(boardNo); // 번호, 카테고리명, 제목, 내용, 작성자아이디, 작성일
+		Board b = bService.selectBoard(boardNo);
 		
-		Attachment at = bService.selectAttachment(boardNo); // null / 첨부파일번호, 원본명, 수정명, 저장경로
+		Attachment at = bService.selectAttachment(boardNo);
 		
 		request.setAttribute("list", list);
 		request.setAttribute("b", b);
